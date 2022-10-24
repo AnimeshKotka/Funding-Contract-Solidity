@@ -7,7 +7,18 @@ require("dotenv").config();
 
 async function main() {
   const provider = new ethers.providers.JsonRpcProvider(process.env.RPC_URL);
-  const walet = new ethers.Wallet(process.env.PRIVATE_KEY, provider);
+  const wallet = new ethers.Wallet(process.env.PRIVATE_KEY, provider);
+
+  /**
+   * this is way to hide private key from own system with encryption -> watch
+   * https://youtu.be/gyMwXuJrbJQ?t=27248
+   */
+  // let encryptedJson = fs.readFileSync("./.encryptedKey.json", "utf8");
+  // let wallet = new ethers.Wallet.fromEncryptedJsonSync(
+  //   encryptedJson,
+  //   process.env.PRIVATE_KEY_PASSWORD
+  // );
+  // wallet = await wallet.connect(provider);
 
   const abi = fs.readFileSync(
     "./_contracts_SimpleStorage_sol_SimpleStorage.abi",
@@ -18,7 +29,7 @@ async function main() {
     "utf8"
   );
 
-  const contractFactory = new ethers.ContractFactory(abi, binary, walet);
+  const contractFactory = new ethers.ContractFactory(abi, binary, wallet);
   console.log("deploying, please wait....");
   const contract = await contractFactory.deploy();
   await contract.deployTransaction.wait(1);
@@ -30,7 +41,7 @@ async function main() {
   // console.log("Here is the receipt:");
   // console.log(deploymentReceipt);
   // const tx = {
-  //   nonce: await walet.getTransactionCount(),
+  //   nonce: await wallet.getTransactionCount(),
   //   gasPrice: 20000000000,
   //   gasLimit: 6721975,
   //   to: null,
@@ -39,7 +50,7 @@ async function main() {
   //   chainId: 1337,
   // };
   // console.log("Let's deploy another! Please wait...");
-  // let resp = await walet.sendTransaction(tx);
+  // let resp = await wallet.sendTransaction(tx);
   // console.log(resp);
 
   const favNumber = await contract.retrive();
