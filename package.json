@@ -4,6 +4,7 @@
     "ethers": "^5.7.2",
     "fs-extra": "^10.1.0",
     "ganache": "^7.4.4",
+    "prettier": "^2.7.1",
     "solc": "0.8.7-fixed"
   },
   "scripts": {
